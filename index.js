@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const port = process.env.PORT || 4000
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // middleware
 app.use(cors())
@@ -32,6 +32,7 @@ async function run() {
     await client.connect();
 
     const gameCollection = client.db('gamerDB').collection('gamer');
+    const userCollection = client.db('gamerDB').collection('users');
 
     app.post("/gamer", async (req, res) => {
       const newGamer = req.body;
@@ -42,6 +43,39 @@ async function run() {
     app.get("/gamer", async (req, res) => {
       const cursor = gameCollection.find()
       const result = await cursor.toArray()
+      res.send(result)
+    })
+
+    app.get("/gamer/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await gameCollection.findOne(query)
+      res.send(result)
+    })
+
+    // user
+
+    app.get('/users', async (req, res) => {
+      const cursor = userCollection.find()
+      const result = await cursor.toArray()
+      res.send(result)
+    })
+
+    app.post('/users', async (req, res) => {
+      const newUsers = req.body;
+      const result = await userCollection.insertOne(newUsers)
+      res.send(result)
+    })
+
+    app.patch('/users', async(req, res) => {
+      const email = req.body.email;
+      const filter = { email }
+      const updatedDoc = {
+        $set: {
+          lastSignInTime:req.body?.lastSignInTime
+        }
+      }
+      const result = await userCollection.updateOne(filter, updatedDoc)
       res.send(result)
     })
 
