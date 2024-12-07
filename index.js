@@ -53,9 +53,11 @@ async function run() {
       res.send(result)
     })
 
-    app.get("/gamer/:email", async (req, res) => {
-      const email = req.body.email;
-      const filter = {email}
+    app.delete('/gamer/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await gameCollection.deleteOne(query)
+      res.send(result)
     })
 
     // user
