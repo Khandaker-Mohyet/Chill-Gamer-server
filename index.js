@@ -82,6 +82,15 @@ async function run() {
       res.send(result)
     })
 
+    app.get("/top-reviews", async (req, res) => {
+      const topReview = await gameCollection
+        .find({})
+        .sort({ rating: -1 })
+        .limit(5)
+        .toArray();
+      res.json(topReview);
+    });
+
     // watchList
 
     app.post("/watchList", async (req, res) => {
@@ -91,7 +100,7 @@ async function run() {
     })
 
     app.get("/watchList", async (req, res) => {
-      const cursor = gameCollection.find()
+      const cursor = watchList.find()
       const result = await cursor.toArray()
       res.send(result)
     })
