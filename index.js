@@ -33,6 +33,7 @@ async function run() {
 
     const gameCollection = client.db('gamerDB').collection('gamer');
     const userCollection = client.db('gamerDB').collection('users');
+    const watchList = client.db('gamerDB').collection('watchList');
 
     app.post("/gamer", async (req, res) => {
       const newGamer = req.body;
@@ -71,12 +72,27 @@ async function run() {
         }
       }
       const result = await gameCollection.updateOne(filter, game, option)
+      res.send(result)
     })
 
     app.delete('/gamer/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) }
       const result = await gameCollection.deleteOne(query)
+      res.send(result)
+    })
+
+    // watchList
+
+    app.post("/watchList", async (req, res) => {
+      const newGamer = req.body;
+      const result = await watchList.insertOne(newGamer)
+      res.send(result)
+    })
+
+    app.get("/watchList", async (req, res) => {
+      const cursor = gameCollection.find()
+      const result = await cursor.toArray()
       res.send(result)
     })
 
