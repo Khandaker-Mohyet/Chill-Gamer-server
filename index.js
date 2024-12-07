@@ -86,7 +86,7 @@ async function run() {
       const topReview = await gameCollection
         .find({})
         .sort({ rating: -1 })
-        .limit(5)
+        .limit(6)
         .toArray();
       res.json(topReview);
     });
