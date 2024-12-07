@@ -53,6 +53,10 @@ async function run() {
       res.send(result)
     })
 
+    app.put('/gamer/:id', async (req, res) => {
+      const id = req.params.id;
+    })
+
     app.delete('/gamer/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) }
@@ -66,6 +70,7 @@ async function run() {
       const cursor = userCollection.find()
       const result = await cursor.toArray()
       res.send(result)
+
     })
 
     app.post('/users', async (req, res) => {
