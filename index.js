@@ -55,6 +55,22 @@ async function run() {
 
     app.put('/gamer/:id', async (req, res) => {
       const id = req.params.id;
+      const filter = { _id: new ObjectId(id) }
+      const option = { upsert: true };
+      const updateGame = req.body;
+      const game = {
+        $set: {
+          photo: updateGame.photo,
+          name: updateGame.name,
+          description: updateGame.description,
+          rating: updateGame.rating,
+          year: updateGame.year,
+          genres: updateGame.genres,
+          email: updateGame.email,
+          userName: updateGame.userName
+        }
+      }
+      const result = await gameCollection.updateOne(filter, game, option)
     })
 
     app.delete('/gamer/:id', async (req, res) => {
